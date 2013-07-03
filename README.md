@@ -34,7 +34,7 @@ opt := &instagram.Parameters{Count: 3}
 media, next, err := client.Users.RecentMedia("3", opt)
 ~~~
 
-Please see [examples/example.go]("./examples/example.go") for a complete example.
+Please see [examples/example.go](./examples/example.go) for a complete example.
 
 ## Data Retrieval
 
@@ -68,7 +68,7 @@ fmt.Println("Username", user.Username)
 ## Credits
 
 * [go-github](https://github.com/google/go-github) in which this library mimics the structure.
-  LICENSE for go-github is included in [go-github-LICENSE.md]("./go-github-LICENSE.md")
+  LICENSE for go-github is included in [go-github-LICENSE.md](./go-github-LICENSE.md)
 * [python-instagram](https://github.com/Instagram/python-instagram)
 * [Instagram endpoints docs](http://instagram.com/developer/endpoints/)
 
