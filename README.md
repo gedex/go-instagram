@@ -3,6 +3,10 @@ go-instagram
 
 go-instagram is Go library for accessing Instagram REST and Search APIs.
 
+**Documentation:** <http://godoc.org/github.com/gedex/go-instagram/instagram>
+
+**Build Status:** [![Build Status](https://travis-ci.org/gedex/go-instagram.png?branch=master)](https://travis-ci.org/gedex/go-instagram)
+
 ## Basic Usage
 
 Access different parts of the Instagram API using the various services on a Instagram
