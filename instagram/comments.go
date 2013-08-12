@@ -49,9 +49,8 @@ func (s *CommentsService) Add(mediaId string, text []string) error {
 	params := url.Values{
 		"text": text,
 	}
-	u += params.Encode()
 
-	req, err := s.client.NewRequest("POST", u, "")
+	req, err := s.client.NewRequest("POST", u, params.Encode())
 	if err != nil {
 		return err
 	}
