@@ -42,7 +42,7 @@ func (s *TagsService) Get(tagName string) (*Tag, error) {
 // RecentMedia Get a list of recently tagged media.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/tags/#get_tags_media_recent
-func (s *TagsService) RecentMedia(tagName string, opt *Parameters) ([]Media, error) {
+func (s *TagsService) RecentMedia(tagName string, opt *Parameters) ([]Media, *ResponsePagination, error) {
 	u := fmt.Sprintf("tags/%v/media/recent", tagName)
 	if opt != nil {
 		params := url.Values{}
@@ -56,12 +56,19 @@ func (s *TagsService) RecentMedia(tagName string, opt *Parameters) ([]Media, err
 	}
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	media := new([]Media)
+
 	_, err = s.client.Do(req, media)
-	return *media, err
+
+	page := new(ResponsePagination)
+	if s.client.Response.Pagination != nil {
+		page = s.client.Response.Pagination
+	}
+
+	return *media, page, err
 }
 
 // Search for tags by name.
