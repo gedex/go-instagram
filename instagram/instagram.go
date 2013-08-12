@@ -213,6 +213,10 @@ func (c *Client) NewRequest(method, urlStr string, body string) (*http.Request, 
 		return nil, err
 	}
 
+	if method == "POST" {
+		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	}
+
 	req.Header.Add("User-Agent", c.UserAgent)
 	return req, nil
 }
