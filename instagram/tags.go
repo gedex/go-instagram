@@ -74,14 +74,21 @@ func (s *TagsService) RecentMedia(tagName string, opt *Parameters) ([]Media, *Re
 // Search for tags by name.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/tags/#get_tags_search
-func (s *TagsService) Search(q string) ([]Tag, error) {
+func (s *TagsService) Search(q string) ([]Tag, *ResponsePagination, error) {
 	u := "tags/search?q=" + q
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	tags := new([]Tag)
+
 	_, err = s.client.Do(req, tags)
-	return *tags, err
+
+	page := new(ResponsePagination)
+	if s.client.Response.Pagination != nil {
+		page = s.client.Response.Pagination
+	}
+
+	return *tags, page, err
 }
