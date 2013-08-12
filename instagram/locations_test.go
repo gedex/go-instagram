@@ -87,7 +87,7 @@ func TestLocationsService_RecentMedia(t *testing.T) {
 		MinID:        "1",
 		MaxID:        "1",
 	}
-	media, err := client.Locations.RecentMedia(1, opt)
+	media, _, err := client.Locations.RecentMedia(1, opt)
 	if err != nil {
 		t.Errorf("Location.RecentMedia returned error: %v", err)
 	}

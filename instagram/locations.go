@@ -46,7 +46,7 @@ func (s *LocationsService) Get(locationId int) (*Location, error) {
 // RecentMedia gets a list of recent media from a given location.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/locations/#get_locations_media_recent
-func (s *LocationsService) RecentMedia(locationId int, opt *Parameters) ([]Media, error) {
+func (s *LocationsService) RecentMedia(locationId int, opt *Parameters) ([]Media, *ResponsePagination, error) {
 	u := fmt.Sprintf("locations/%v/media/recent", locationId)
 	if opt != nil {
 		params := url.Values{}
@@ -66,12 +66,18 @@ func (s *LocationsService) RecentMedia(locationId int, opt *Parameters) ([]Media
 	}
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	media := new([]Media)
 	_, err = s.client.Do(req, media)
-	return *media, err
+
+	page := new(ResponsePagination)
+	if s.client.Response.Pagination != nil {
+		page = s.client.Response.Pagination
+	}
+
+	return *media, page, err
 }
 
 // Search for a location by geographic coordinate.
