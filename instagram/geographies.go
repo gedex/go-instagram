@@ -7,6 +7,8 @@ package instagram
 
 import (
 	"fmt"
+	"net/url"
+	"strconv"
 )
 
 // GeographiesService handles communication with the geographies related
@@ -21,14 +23,31 @@ type GeographiesService struct {
 // real-time subscriptions.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/geographies/#get_geographies_media_recent
-func (s *GeographiesService) RecentMedia(geoId string) ([]Media, error) {
+func (s *GeographiesService) RecentMedia(geoId string, opt *Parameters) ([]Media, *ResponsePagination, error) {
 	u := fmt.Sprintf("geographies/%v/media/recent", geoId)
+	if opt != nil {
+		params := url.Values{}
+		if opt.MinID != "" {
+			params.Add("min_id", opt.MinID)
+		}
+		if opt.Count != 0 {
+			params.Add("count", strconv.FormatUint(opt.Count, 10))
+		}
+		u += "?" + params.Encode()
+	}
+
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	media := new([]Media)
 	_, err = s.client.Do(req, media)
-	return *media, err
+
+	page := new(ResponsePagination)
+	if s.client.Response.Pagination != nil {
+		page = s.client.Response.Pagination
+	}
+
+	return *media, page, err
 }
