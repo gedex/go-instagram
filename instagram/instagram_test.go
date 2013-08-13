@@ -61,7 +61,7 @@ func TestNewClient(t *testing.T) {
 	if c.BaseURL.String() != want {
 		t.Errorf("NewClient BaseURL = %v, want %v", c.BaseURL.String(), want)
 	}
-	want = "go-instagram/0.1"
+	want = "go-instagram/0.2"
 	if c.UserAgent != want {
 		t.Errorf("NewClient UserAgent = %v, want %v", c.UserAgent, want)
 	}

@@ -42,7 +42,7 @@ import (
 
 const (
 	// LibraryVersion represents this library version
-	LibraryVersion = "0.1"
+	LibraryVersion = "0.2"
 
 	// BaseURL represents Instagram API base URL
 	BaseURL = "https://api.instagram.com/v1/"
