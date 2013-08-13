@@ -89,17 +89,12 @@ func (s *LocationsService) Search(lat, lng float64, opt *Parameters) ([]Location
 	params.Add("lat", strconv.FormatFloat(lat, 'f', 7, 64))
 	params.Add("lng", strconv.FormatFloat(lng, 'f', 7, 64))
 	if opt != nil {
-		if opt.MinTimestamp != 0 {
-			params.Add("min_timestamp", strconv.FormatInt(opt.MinTimestamp, 10))
-		}
-		if opt.MaxTimestamp != 0 {
-			params.Add("max_timestamp", strconv.FormatInt(opt.MaxTimestamp, 10))
-		}
-		if opt.MinID != "" {
-			params.Add("min_id", opt.MinID)
-		}
-		if opt.MaxID != "" {
-			params.Add("max_id", opt.MaxID)
+		if opt.Distance != 0 {
+			distance := opt.Distance
+			if distance > 5000 {
+				distance = 5000
+			}
+			params.Add("distance", strconv.FormatFloat(distance, 'f', 7, 64))
 		}
 	}
 	u += "?" + params.Encode()

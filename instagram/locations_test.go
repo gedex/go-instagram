@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strconv"
 	"testing"
 )
 
@@ -39,21 +40,15 @@ func TestLocationsService_Search(t *testing.T) {
 	mux.HandleFunc("/locations/search", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
 		testFormValues(t, r, values{
-			"lat":           "37.7749295",
-			"lng":           "-122.4194155",
-			"max_timestamp": "1",
-			"min_timestamp": "1",
-			"max_id":        "1",
-			"min_id":        "1",
+			"lat":      "37.7749295",
+			"lng":      "-122.4194155",
+			"distance": strconv.FormatFloat(5000, 'f', 7, 64),
 		})
 		fmt.Fprint(w, `{"data": [{"id":1}]}`)
 	})
 
 	opt := &Parameters{
-		MinTimestamp: 1,
-		MaxTimestamp: 1,
-		MinID:        "1",
-		MaxID:        "1",
+		Distance: 5000,
 	}
 	locations, err := client.Locations.Search(37.7749295, -122.4194155, opt)
 	if err != nil {
