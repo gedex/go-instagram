@@ -19,15 +19,15 @@ func TestLocationsService_Get(t *testing.T) {
 
 	mux.HandleFunc("/locations/1", func(w http.ResponseWriter, r *http.Request) {
 		testMethod(t, r, "GET")
-		fmt.Fprint(w, `{"data":{"id": 1}}`)
+		fmt.Fprint(w, `{"data":{"id": "1"}}`)
 	})
 
-	loc, err := client.Locations.Get(1)
+	loc, err := client.Locations.Get("1")
 	if err != nil {
 		t.Errorf("Locations.Get returned error: %v", err)
 	}
 
-	want := &Location{ID: 1}
+	want := &Location{ID: "1"}
 	if !reflect.DeepEqual(loc, want) {
 		t.Errorf("Locations.Get returned %+v, want %+v", loc, want)
 	}
@@ -44,7 +44,7 @@ func TestLocationsService_Search(t *testing.T) {
 			"lng":      "-122.4194155",
 			"distance": strconv.FormatFloat(5000, 'f', 7, 64),
 		})
-		fmt.Fprint(w, `{"data": [{"id":1}]}`)
+		fmt.Fprint(w, `{"data": [{"id":"1"}]}`)
 	})
 
 	opt := &Parameters{
@@ -55,7 +55,7 @@ func TestLocationsService_Search(t *testing.T) {
 		t.Errorf("Locations.Search returned error: %v", err)
 	}
 
-	want := []Location{Location{ID: 1}}
+	want := []Location{Location{ID: "1"}}
 	if !reflect.DeepEqual(locations, want) {
 		t.Errorf("Locations.Search returned %+v, want %+v", locations, want)
 	}
@@ -82,7 +82,7 @@ func TestLocationsService_RecentMedia(t *testing.T) {
 		MinID:        "1",
 		MaxID:        "1",
 	}
-	media, _, err := client.Locations.RecentMedia(1, opt)
+	media, _, err := client.Locations.RecentMedia("1", opt)
 	if err != nil {
 		t.Errorf("Location.RecentMedia returned error: %v", err)
 	}

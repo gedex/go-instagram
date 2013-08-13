@@ -21,7 +21,7 @@ type LocationsService struct {
 
 // Location represents information about a location.
 type Location struct {
-	ID          int     `json:"id,omitempty"`
+	ID          string  `json:"id,omitempty"`
 	Name        string  `json:"name,omitempty"`
 	CreatedTime int64   `json:"created_time,string,omitempty"`
 	Latitude    float64 `json:"latitude,omitempty"`
@@ -31,7 +31,7 @@ type Location struct {
 // Get information about a location.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/locations/#get_locations
-func (s *LocationsService) Get(locationId int) (*Location, error) {
+func (s *LocationsService) Get(locationId string) (*Location, error) {
 	u := fmt.Sprintf("locations/%v", locationId)
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
@@ -46,7 +46,7 @@ func (s *LocationsService) Get(locationId int) (*Location, error) {
 // RecentMedia gets a list of recent media from a given location.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/locations/#get_locations_media_recent
-func (s *LocationsService) RecentMedia(locationId int, opt *Parameters) ([]Media, *ResponsePagination, error) {
+func (s *LocationsService) RecentMedia(locationId string, opt *Parameters) ([]Media, *ResponsePagination, error) {
 	u := fmt.Sprintf("locations/%v/media/recent", locationId)
 	if opt != nil {
 		params := url.Values{}
