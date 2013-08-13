@@ -42,13 +42,13 @@ import (
 
 const (
 	// LibraryVersion represents this library version
-	LibraryVersion = "0.2"
+	LibraryVersion = "0.3"
 
 	// BaseURL represents Instagram API base URL
 	BaseURL = "https://api.instagram.com/v1/"
 
 	// UserAgent represents this client User-Agent
-	UserAgent = "go-instagram/" + LibraryVersion
+	UserAgent = "github.com/gedex/go-instagram v" + LibraryVersion
 )
 
 // A Client manages communication with the Instagram API.
