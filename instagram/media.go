@@ -34,7 +34,7 @@ type Media struct {
 	CreatedTime  int64          `json:"created_time,string,omitempty"`
 	Images       *MediaImages   `json:"images,omitempty"`
 	ID           string         `json:"id,omitempty"`
-	Location     *Location      `json:"location,omitempty"`
+	Location     *MediaLocation `json:"location,omitempty"`
 }
 
 // MediaComments represents comments on Instagram's media.
@@ -95,6 +95,18 @@ type MediaVideo struct {
 	URL    string `json:"url,omitempty"`
 	Width  int    `json:"width,omitempty"`
 	Height int    `json:"height,omitempty"`
+}
+
+// MediaLocation represents information about a location.
+//
+// There's Location type under LocationsService, the different is
+// the ID type. I've reported this inconsistency to Instagram
+// https://groups.google.com/forum/#!topic/instagram-api-developers/Fty5lOsOGEg
+type MediaLocation struct {
+	ID        int     `json:"id,omitempty"`
+	Name      string  `json:"name,omitempty"`
+	Latitude  float64 `json:"latitude,omitempty"`
+	Longitude float64 `json:"longitude,omitempty"`
 }
 
 // Get information about a media object.
