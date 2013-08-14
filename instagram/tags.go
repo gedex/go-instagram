@@ -62,6 +62,9 @@ func (s *TagsService) RecentMedia(tagName string, opt *Parameters) ([]Media, *Re
 	media := new([]Media)
 
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -84,6 +87,9 @@ func (s *TagsService) Search(q string) ([]Tag, *ResponsePagination, error) {
 	tags := new([]Tag)
 
 	_, err = s.client.Do(req, tags)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {

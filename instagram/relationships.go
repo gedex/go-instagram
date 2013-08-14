@@ -47,6 +47,9 @@ func (s *RelationshipsService) Follows(userId string) ([]User, *ResponsePaginati
 	users := new([]User)
 
 	_, err = s.client.Do(req, users)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -76,6 +79,9 @@ func (s *RelationshipsService) FollowedBy(userId string) ([]User, *ResponsePagin
 	users := new([]User)
 
 	_, err = s.client.Do(req, users)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -98,6 +104,9 @@ func (s *RelationshipsService) RequestedBy() ([]User, *ResponsePagination, error
 	users := new([]User)
 
 	_, err = s.client.Do(req, users)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {

@@ -43,6 +43,9 @@ func (s *GeographiesService) RecentMedia(geoId string, opt *Parameters) ([]Media
 
 	media := new([]Media)
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {

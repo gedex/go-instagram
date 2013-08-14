@@ -85,6 +85,9 @@ func (s *UsersService) MediaFeed(opt *Parameters) ([]Media, *ResponsePagination,
 	media := new([]Media)
 
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -132,6 +135,9 @@ func (s *UsersService) RecentMedia(userId string, opt *Parameters) ([]Media, *Re
 	media := new([]Media)
 
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -165,6 +171,9 @@ func (s *UsersService) LikedMedia(opt *Parameters) ([]Media, *ResponsePagination
 	media := new([]Media)
 
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -196,6 +205,9 @@ func (s *UsersService) Search(q string, opt *Parameters) ([]User, *ResponsePagin
 	users := new([]User)
 
 	_, err = s.client.Do(req, users)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {

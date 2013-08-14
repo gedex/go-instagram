@@ -69,7 +69,11 @@ func (s *LocationsService) RecentMedia(locationId string, opt *Parameters) ([]Me
 	}
 
 	media := new([]Media)
+
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {

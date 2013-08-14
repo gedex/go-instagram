@@ -157,6 +157,9 @@ func (s *MediaService) Search(opt *Parameters) ([]Media, *ResponsePagination, er
 	media := new([]Media)
 
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
@@ -177,7 +180,11 @@ func (s *MediaService) Popular() ([]Media, *ResponsePagination, error) {
 	}
 
 	media := new([]Media)
+
 	_, err = s.client.Do(req, media)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	page := new(ResponsePagination)
 	if s.client.Response.Pagination != nil {
