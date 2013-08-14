@@ -264,7 +264,23 @@ func CheckResponse(r *http.Response) error {
 	if r.StatusCode == http.StatusOK {
 		return nil
 	}
-	resp := &ErrorResponse{Response: r}
+
+	resp := new(ErrorResponse)
+	resp.Response = r
+
+	// Sometimes Instagram returns 500 with plain message
+	// "Oops, an error occurred.".
+	if r.StatusCode == http.StatusInternalServerError {
+		meta := &ResponseMeta{
+			ErrorType:    "Internal Server Error",
+			Code:         500,
+			ErrorMessage: "Oops, an error occurred.",
+		}
+		resp.Meta = meta
+
+		return resp
+	}
+
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
 		json.Unmarshal(data, resp)
