@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640" />
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Go-instagram by gedex</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/gedex/go-instagram">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Go-instagram</h1>
+            <h2>Go library for accessing Instagram REST and Search APIs</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/gedex/go-instagram/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/gedex/go-instagram/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a name="go-instagram" class="anchor" href="#go-instagram"><span class="octicon octicon-link"></span></a>go-instagram</h1>
+
+<p>go-instagram is Go library for accessing Instagram REST and Search APIs.</p>
+
+<p><strong>Documentation:</strong> <a href="http://godoc.org/github.com/gedex/go-instagram/instagram">http://godoc.org/github.com/gedex/go-instagram/instagram</a></p>
+
+<p><strong>Build Status:</strong> <a href="https://travis-ci.org/gedex/go-instagram"><img src="https://travis-ci.org/gedex/go-instagram.png?branch=master" alt="Build Status"></a></p>
+
+<h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+
+<p>Access different parts of the Instagram API using the various services on a Instagram
+Client:</p>
+
+<div class="highlight"><pre><span class="c1">// You can optionally pass your own HTTP's client, otherwise pass it with nil.</span>
+<span class="nx">client</span> <span class="o">:=</span> <span class="nx">instagram</span><span class="p">.</span><span class="nx">NewClient</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+</pre></div>
+
+<p>You can then optionally set ClientID, ClientSecret and AccessToken:</p>
+
+<div class="highlight"><pre><span class="nx">client</span><span class="p">.</span><span class="nx">ClientID</span> <span class="p">=</span> <span class="s">"8f2c0ad697ea4094beb2b1753b7cde9c"</span>
+</pre></div>
+
+<p>With client object set, you can communicate with Instagram endpoints:</p>
+
+<div class="highlight"><pre><span class="c1">// Gets the most recent media published by a user with id "3"</span>
+<span class="nx">media</span><span class="p">,</span> <span class="nx">next</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Users</span><span class="p">.</span><span class="nx">RecentMedia</span><span class="p">(</span><span class="s">"3"</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+</pre></div>
+
+<p>Set optional parameters for an API method by passing an Parameters object.</p>
+
+<div class="highlight"><pre><span class="c1">// Gets user's feed.</span>
+<span class="nx">opt</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">instagram</span><span class="p">.</span><span class="nx">Parameters</span><span class="p">{</span><span class="nx">Count</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">media</span><span class="p">,</span> <span class="nx">next</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Users</span><span class="p">.</span><span class="nx">RecentMedia</span><span class="p">(</span><span class="s">"3"</span><span class="p">,</span> <span class="nx">opt</span><span class="p">)</span>
+</pre></div>
+
+<p>Please see <a href="./examples/example.go">examples/example.go</a> for a complete example.</p>
+
+<h2>
+<a name="data-retrieval" class="anchor" href="#data-retrieval"><span class="octicon octicon-link"></span></a>Data Retrieval</h2>
+
+<p>The methods which return slice in first return value will return three values (data, pagination, and error).
+Here's an example of retrieving popular media:</p>
+
+<pre><code>media, next, err := client.Media.Popular()
+if err != nil {
+    fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+}
+for _, m := range media {
+    fmt.Printf("ID: %v, Type: %v\n", m.ID, m.Type)
+}
+if next.NextURL != "" {
+    fmt.Println("Next URL", next.NextURL)
+}
+</code></pre>
+
+<p>If a single type is returned in first return value, then only two values returned. Here's an example
+of retrieving user's information:</p>
+
+<pre><code>user, err := client.Users.Get("3")
+if err != nil {
+    fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+}
+fmt.Println("Username", user.Username)
+</code></pre>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<ul>
+<li>
+<a href="https://github.com/google/go-github">go-github</a> in which this library mimics the structure.
+LICENSE for go-github is included in <a href="./go-github-LICENSE.md">go-github-LICENSE.md</a>
+</li>
+<li><a href="https://github.com/Instagram/python-instagram">python-instagram</a></li>
+<li><a href="http://instagram.com/developer/endpoints/">Instagram endpoints docs</a></li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>This library is distributed under the BSD-style license found in the LICENSE file.</p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/gedex">gedex</a> can be found on <a href="https://github.com/gedex/go-instagram">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
