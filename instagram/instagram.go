@@ -38,6 +38,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 const (
@@ -97,6 +98,11 @@ type Parameters struct {
 	Distance     float64
 }
 
+type Ratelimit struct {
+	Limit     int
+	Remaining int
+}
+
 // Response specifies Instagram's response structure.
 //
 // Instagram's envelope structure spec: http://instagram.com/developer/endpoints/#structure
@@ -130,6 +136,24 @@ func (r *Response) GetError() error {
 // GetPagination gets pagination information.
 func (r *Response) GetPagination() *ResponsePagination {
 	return r.Pagination
+}
+
+// Parsed rate limit information from response headers.
+func (r *Response) GetRatelimit() (Ratelimit, error) {
+	var rl Ratelimit
+	var err error
+	const (
+		Limit     = `X-Ratelimit-Limit`
+		Remaining = `X-Ratelimit-Remaining`
+	)
+
+	rl.Limit, err = strconv.Atoi(r.Response.Header.Get(Limit))
+	if err != nil {
+		return rl, err
+	}
+
+	rl.Remaining, err = strconv.Atoi(r.Response.Header.Get(Remaining))
+	return rl, err
 }
 
 // NextURL gets next url which represents URL for next set of data.
@@ -231,8 +255,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	}
 
 	defer resp.Body.Close()
-
-	// TODO: Checks rate limit
 
 	err = CheckResponse(resp)
 	if err != nil {
