@@ -33,6 +33,7 @@ type Media struct {
 	UserHasLiked bool           `json:"user_has_liked,omitempty"`
 	CreatedTime  int64          `json:"created_time,string,omitempty"`
 	Images       *MediaImages   `json:"images,omitempty"`
+	Videos       *MediaVideos   `json:"videos,omitempty"`
 	ID           string         `json:"id,omitempty"`
 	Location     *MediaLocation `json:"location,omitempty"`
 }
