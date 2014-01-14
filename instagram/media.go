@@ -87,7 +87,6 @@ type MediaImage struct {
 // MediaVideos represents MediaVideo with various resolutions.
 type MediaVideos struct {
 	LowResolution      *MediaVideo `json:"low_resolution,omitempty"`
-	Thumbnail          *MediaVideo `json:"thumbnail,omitempty"`
 	StandardResolution *MediaVideo `json:"standard_resolution,omitempty"`
 }
 
