@@ -98,8 +98,12 @@ type Parameters struct {
 	Distance     float64
 }
 
+// Ratelimit specifies API calls limit found in HTTP headers.
 type Ratelimit struct {
-	Limit     int
+	// Total number of possible calls per hour
+	Limit int
+
+	// How many calls are left for this particular token or client ID
 	Remaining int
 }
 
