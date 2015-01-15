@@ -197,21 +197,26 @@ func (s *UsersService) Search(q string, opt *Parameters) ([]User, *ResponsePagin
 	}
 	u += "?" + params.Encode()
 
+	users := new([]User)
+
+RETRY:
+	tmp := new([]User)
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
 		return nil, nil, err
 	}
 
-	users := new([]User)
-
-	_, err = s.client.Do(req, users)
+	_, err = s.client.Do(req, tmp)
 	if err != nil {
 		return nil, nil, err
 	}
 
+	*users = append(*users, *tmp...)
 	page := new(ResponsePagination)
-	if s.client.Response.Pagination != nil {
+	if s.client.Response.Pagination != nil && s.client.Response.Pagination.NextURL != "" {
 		page = s.client.Response.Pagination
+		u = page.NextURL
+		goto RETRY
 	}
 
 	return *users, page, err
