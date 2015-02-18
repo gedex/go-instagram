@@ -292,7 +292,9 @@ func CheckResponse(r *http.Response) error {
 	}
 
 	resp := new(ErrorResponse)
+	respMeta := new(ResponseMeta)
 	resp.Response = r
+	resp.Meta = respMeta
 
 	// Sometimes Instagram returns 500 with plain message
 	// "Oops, an error occurred.".
@@ -309,7 +311,17 @@ func CheckResponse(r *http.Response) error {
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
-		json.Unmarshal(data, resp)
+		er := json.Unmarshal(data, resp.Meta)
+		if er != nil {
+			panic(er)
+		}
 	}
 	return resp
+}
+
+func (c *Client) XInstaForwardedFor() string {
+	ip := ExternalIP()
+	signature := ComputeHmac256(ip, c.ClientSecret)
+	return ip + "|" + signature
+
 }

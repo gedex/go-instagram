@@ -39,21 +39,29 @@ func (s *RelationshipsService) Follows(userId string) ([]User, *ResponsePaginati
 		u = "users/self/follows"
 	}
 
+	users := new([]User)
+
+RETRY:
+
 	req, err := s.client.NewRequest("GET", u, "")
 	if err != nil {
 		return nil, nil, err
 	}
 
-	users := new([]User)
+	tmp := new([]User)
 
-	_, err = s.client.Do(req, users)
+	_, err = s.client.Do(req, tmp)
 	if err != nil {
 		return nil, nil, err
 	}
 
+	*users = append(*users, *tmp...)
+
 	page := new(ResponsePagination)
-	if s.client.Response.Pagination != nil {
+	if s.client.Response.Pagination != nil && s.client.Response.Pagination.NextURL != "" {
 		page = s.client.Response.Pagination
+		u = page.NextURL
+		goto RETRY
 	}
 
 	return *users, page, err
@@ -179,9 +187,12 @@ func relationshipAction(s *RelationshipsService, userId, action, method string) 
 		action = "action=" + action
 	}
 	req, err := s.client.NewRequest(method, u, action)
+
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Set("X-Insta-Forwarded-For", s.client.XInstaForwardedFor())
 
 	rel := new(Relationship)
 	_, err = s.client.Do(req, rel)
