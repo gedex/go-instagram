@@ -313,7 +313,7 @@ func CheckResponse(r *http.Response) error {
 	if err == nil && data != nil {
 		er := json.Unmarshal(data, resp.Meta)
 		if er != nil {
-			panic(er)
+			return er
 		}
 	}
 	return resp
