@@ -15,8 +15,11 @@ RETRY:
 	resp, err := http.Get("http://myexternalip.com/raw")
 
 	if err != nil {
-		panic(err)
+		time.Sleep(time.Second * 5)
+		fmt.Println("error accessing myexternalip gonna retry")
+		goto RETRY
 	}
+
 	defer resp.Body.Close()
 
 	b, err := ioutil.ReadAll(resp.Body)
