@@ -317,6 +317,17 @@ func CheckResponse(r *http.Response) error {
 		}
 	}
 
+	if r.StatusCode == 400 {
+		meta := &ResponseMeta{
+			ErrorType:    "Internal Server Error",
+			Code:         400,
+			ErrorMessage: string(data),
+		}
+		resp.Meta = meta
+
+		return resp
+	}
+
 	if err != nil {
 		return err
 	}
