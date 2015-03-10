@@ -278,7 +278,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 type ErrorResponse Response
 
 func (r *ErrorResponse) Error() string {
-	return fmt.Sprintf("%v %v: %d %v %v",
+	return fmt.Sprintf("Error response %v %v: %d %v %v",
 		r.Response.Request.Method, r.Response.Request.URL,
 		r.Response.StatusCode, r.Meta.ErrorType, r.Meta.ErrorMessage)
 }
@@ -292,7 +292,9 @@ func CheckResponse(r *http.Response) error {
 	}
 
 	resp := new(ErrorResponse)
+	respMeta := new(ResponseMeta)
 	resp.Response = r
+	resp.Meta = respMeta
 
 	// Sometimes Instagram returns 500 with plain message
 	// "Oops, an error occurred.".
@@ -309,7 +311,33 @@ func CheckResponse(r *http.Response) error {
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err == nil && data != nil {
-		json.Unmarshal(data, resp)
+		er := json.Unmarshal(data, resp.Meta)
+		if er != nil {
+			return er
+		}
 	}
+
+	if r.StatusCode == 400 {
+		meta := &ResponseMeta{
+			ErrorType:    "Internal Server Error",
+			Code:         400,
+			ErrorMessage: string(data),
+		}
+		resp.Meta = meta
+
+		return resp
+	}
+
+	if err != nil {
+		return err
+	}
+
 	return resp
+}
+
+func (c *Client) XInstaForwardedFor() string {
+	ip := ExternalIP()
+	signature := ComputeHmac256(ip, c.ClientSecret)
+	return ip + "|" + signature
+
 }
