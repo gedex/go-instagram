@@ -278,7 +278,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 type ErrorResponse Response
 
 func (r *ErrorResponse) Error() string {
-	return fmt.Sprintf("%v %v: %d %v %v",
+	return fmt.Sprintf("Error response %v %v: %d %v %v",
 		r.Response.Request.Method, r.Response.Request.URL,
 		r.Response.StatusCode, r.Meta.ErrorType, r.Meta.ErrorMessage)
 }
@@ -316,6 +316,11 @@ func CheckResponse(r *http.Response) error {
 			return er
 		}
 	}
+
+	if err != nil {
+		return err
+	}
+
 	return resp
 }
 
