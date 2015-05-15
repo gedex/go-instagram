@@ -257,7 +257,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
 	err = CheckResponse(resp)
@@ -278,9 +277,9 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 type ErrorResponse Response
 
 func (r *ErrorResponse) Error() string {
-	return fmt.Sprintf("%v %v: %d %v %v",
+	return fmt.Sprintf("%v %v: %d %v",
 		r.Response.Request.Method, r.Response.Request.URL,
-		r.Response.StatusCode, r.Meta.ErrorType, r.Meta.ErrorMessage)
+		r.Response.StatusCode, r.Meta.ErrorMessage)
 }
 
 // CheckResponse checks the API response for error, and returns it
@@ -293,23 +292,23 @@ func CheckResponse(r *http.Response) error {
 
 	resp := new(ErrorResponse)
 	resp.Response = r
+	resp.Meta = &ResponseMeta{
+		Code:         r.StatusCode,
+		ErrorType:    http.StatusText(r.StatusCode),
+		ErrorMessage: http.StatusText(r.StatusCode),
+	}
 
-	// Sometimes Instagram returns 500 with plain message
-	// "Oops, an error occurred.".
-	if r.StatusCode == http.StatusInternalServerError {
-		meta := &ResponseMeta{
-			ErrorType:    "Internal Server Error",
-			Code:         500,
-			ErrorMessage: "Oops, an error occurred.",
-		}
-		resp.Meta = meta
-
+	if r.StatusCode == http.StatusInternalServerError || r.StatusCode == http.StatusNotFound {
 		return resp
 	}
 
 	data, err := ioutil.ReadAll(r.Body)
-	if err == nil && data != nil {
-		json.Unmarshal(data, resp)
+	if err != nil {
+		resp.Meta.ErrorMessage = err.Error()
 	}
+	if err := json.Unmarshal(data, resp); err != nil {
+		resp.Meta.ErrorMessage = err.Error()
+	}
+
 	return resp
 }
