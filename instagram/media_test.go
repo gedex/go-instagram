@@ -48,7 +48,7 @@ func TestMediaService_Shortcode(t *testing.T) {
 
 	want := &Media{ID: "1099059519587916922_259220806"}
 	if !reflect.DeepEqual(media, want) {
-		t.Errorf("Media.Get returned %+v, want %+v", media, want)
+		t.Errorf("Media.Shortcode returned %+v, want %+v", media, want)
 	}
 }
 
