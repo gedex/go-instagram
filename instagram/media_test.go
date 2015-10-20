@@ -32,6 +32,26 @@ func TestMediaService_Get(t *testing.T) {
 	}
 }
 
+func TestMediaService_Shortcode(t *testing.T) {
+	setup()
+	defer teardown()
+
+	mux.HandleFunc("/media/shortcode/9ApM9cDJx6", func(w http.ResponseWriter, r *http.Request) {
+		testMethod(t, r, "GET")
+		fmt.Fprint(w, `{"data":{"id": "1099059519587916922_259220806"}}`)
+	})
+
+	media, err := client.Media.Shortcode("9ApM9cDJx6")
+	if err != nil {
+		t.Errorf("Media.Shortcode returned error: %v", err)
+	}
+
+	want := &Media{ID: "1099059519587916922_259220806"}
+	if !reflect.DeepEqual(media, want) {
+		t.Errorf("Media.Get returned %+v, want %+v", media, want)
+	}
+}
+
 func TestMediaService_Search(t *testing.T) {
 	setup()
 	defer teardown()
