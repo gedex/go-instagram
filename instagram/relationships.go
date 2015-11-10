@@ -63,7 +63,7 @@ func (s *RelationshipsService) Follows(userId string) ([]User, *ResponsePaginati
 // passed then it refers to `self` or curret authenticated user.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/relationships/#get_users_followed_by
-func (s *RelationshipsService) FollowedBy(userId string) ([]User, *ResponsePagination, error) {
+func (s *RelationshipsService) FollowedBy(userId string, max int) ([]User, *ResponsePagination, error) {
 	var u string
 	if userId != "" {
 		u = fmt.Sprintf("users/%v/followed-by", userId)
@@ -71,24 +71,36 @@ func (s *RelationshipsService) FollowedBy(userId string) ([]User, *ResponsePagin
 		u = "users/self/followed-by"
 	}
 
-	req, err := s.client.NewRequest("GET", u, "")
-	if err != nil {
-		return nil, nil, err
-	}
-
-	users := new([]User)
-
-	_, err = s.client.Do(req, users)
-	if err != nil {
-		return nil, nil, err
-	}
+	users := make([]User, 0, max)
+	tmp := new([]User)
 
 	page := new(ResponsePagination)
-	if s.client.Response.Pagination != nil {
-		page = s.client.Response.Pagination
+
+	for u != "" && len(users) < max {
+		req, err := s.client.NewRequest("GET", u, "")
+		fmt.Printf("%v\n", req.URL)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		_, err = s.client.Do(req, tmp)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		users = append(users, *tmp...)
+
+		if s.client.Response.Pagination != nil {
+			page = s.client.Response.Pagination
+			u = page.NextURL
+		} else {
+			u = ""
+		}
+
 	}
 
-	return *users, page, err
+	// Dont return error, because it catched before
+	return users, page, nil
 }
 
 // RequestedBy lists the users who have requested this user's permission to follow.

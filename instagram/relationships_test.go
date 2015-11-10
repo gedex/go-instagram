@@ -61,7 +61,7 @@ func TestRelationshipsService_FollowedBy_self(t *testing.T) {
 		fmt.Fprint(w, `{"data": [{"id":"1"}]}`)
 	})
 
-	users, _, err := client.Relationships.FollowedBy("")
+	users, _, err := client.Relationships.FollowedBy("", 1)
 	if err != nil {
 		t.Errorf("Relationships.FollowedBy returned error: %v", err)
 	}
@@ -81,7 +81,7 @@ func TestRelationshipsService_FollowedBy_userId(t *testing.T) {
 		fmt.Fprint(w, `{"data": [{"id":"1"}]}`)
 	})
 
-	users, _, err := client.Relationships.FollowedBy("1")
+	users, _, err := client.Relationships.FollowedBy("1", 1)
 	if err != nil {
 		t.Errorf("Relationships.FollowedBy returned error: %v", err)
 	}
