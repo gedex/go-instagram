@@ -146,6 +146,9 @@ func (s *MediaService) Search(opt *Parameters) ([]Media, *ResponsePagination, er
 		if opt.Distance != 0 {
 			params.Add("distance", strconv.FormatFloat(opt.Distance, 'f', 7, 64))
 		}
+		if opt.Count != 0 {
+			params.Add("count", strconv.FormatUint(opt.Count, 10))
+		}
 		u += "?" + params.Encode()
 	}
 

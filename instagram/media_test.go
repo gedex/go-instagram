@@ -44,6 +44,7 @@ func TestMediaService_Search(t *testing.T) {
 			"max_timestamp": "1",
 			"min_timestamp": "1",
 			"distance":      "1000.0000000",
+			"count":         "100",
 		})
 		fmt.Fprint(w, `{"data": [{"id":"1"}]}`)
 	})
@@ -54,6 +55,7 @@ func TestMediaService_Search(t *testing.T) {
 		MinTimestamp: 1,
 		MaxTimestamp: 1,
 		Distance:     1000,
+		Count:        100,
 	}
 	media, _, err := client.Media.Search(opt)
 	if err != nil {
