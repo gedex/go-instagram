@@ -24,7 +24,7 @@ type Tag struct {
 	Name       string `json:"name,omitempty"`
 }
 
-// Get information aout a tag object.
+// Get information about a tag object.
 //
 // Instagram API docs: http://instagram.com/developer/endpoints/tags/#get_tags
 func (s *TagsService) Get(tagName string) (*Tag, error) {
